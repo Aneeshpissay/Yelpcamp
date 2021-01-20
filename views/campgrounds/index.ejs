@@ -63,8 +63,8 @@
     <div class="row">
     <% if(campgrounds.length > 0) { %>
       <% for (let campground of campgrounds) { %>
-          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-        <div class="card mt-3 mb-3 shadow" style="width: 18rem;">
+          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+        <div class="card mt-3 mb-3 shadow" style="width: 18rem;" id="zoom">
                     <%if(campground.images.length) {%>
                     <img class="card-img-top" alt="" src="<%=campground.images[0].url%>">
                     <% }else {%>
