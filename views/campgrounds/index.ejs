@@ -1,0 +1,130 @@
+<% layout('layouts/boilerplate')%>
+<header class="jumbotron text-light rounded-0 d-none d-md-block">
+    <div class="container ">
+      <div class="jumbotron-text mt-5 text-center">
+         <h1 class="display-3 jumbotronText ">Welcome to YelpCamp!</h1>
+          <p class="lead jumbotronText">View campgrounds from all over the world</p>
+          <% if(user && !user.isAdmin) { %>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#upgrade">
+               Upgrade
+            </button>
+          <% } %>
+      </div>
+    </div>
+  </header>
+  <nav id="searchNav" class="navbar navbar-expand navbar-light bg-success shadow-sm">
+    <div class="container">
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Sort By
+              </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <form class="sortForm" action="/campgrounds" method="GET">
+                <input type="text" name="sortby" value="rateAvg" class="d-none">
+                <button type="submit" class="dropdown-item">Highest Rated</button>
+              </form>
+              <form class="sortForm" action="/campgrounds" method="GET">
+                <input type="text" name="sortby" value="rateCount" class="d-none">
+                <button type="submit" class="dropdown-item">Most Reviewed</button>
+              </form>
+              <form class="sortForm" action="/campgrounds" method="GET">
+                <input type="text" name="sortby" value="priceLow" class="d-none">
+                <button type="submit" class="dropdown-item">Lowest Price</button>
+              </form>
+              <form class="sortForm" action="/campgrounds" method="GET">
+                <input type="text" name="sortby" value="priceHigh" class="d-none">
+                <button type="submit" class="dropdown-item">Highest Price</button>
+              </form>
+              <a href="/campgrounds" href class="dropdown-item">Reset</a>
+            </div>
+          </li>
+        </ul>
+        <div class="d-none d-md-block">
+          <form action="/campgrounds" method="GET" class="input-group">
+            <input type="text" class="form-control" type="text" name="search" placeholder="Search Campgrounds..." aria-label="Search">
+            <div class="input-group-append">
+              <button class="btn btn-success" type="submit">
+                <i class="fa fa-search"></i>
+                  </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </nav>
+<div class="container">
+  <% if(noMatch !== null) { %>
+    <div class="mt-5"></div>
+      <h3 style="text-align: center;"><%= noMatch %></h3>
+    </div>
+    <% } %>
+    <div class="row">
+    <% if(campgrounds.length > 0) { %>
+      <% for (let campground of campgrounds) { %>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+        <div class="card mt-3 mb-3 shadow" style="width: 18rem;">
+                    <%if(campground.images.length) {%>
+                    <img class="card-img-top" alt="" src="<%=campground.images[0].url%>">
+                    <% }else {%>
+                    <img class="card-img-top" alt=""
+                        src="https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png">
+                    <% } %>
+                    <div class="card-body">
+                        <h5 class="card-title"><%= campground.title %> </h5>
+                          <p class="card-text">
+                            <small class="text-muted"><%= campground.location%></small>
+                        </p>
+                        <p class="card-text">
+                          <small class="text-muted">₹<%= campground.price%>/night</small>
+                      </p>
+                        <a class="btn btn-primary" href="/campgrounds/<%=campground._id%>">View <%=campground.title%></a>
+                    </div>
+        </div>
+        </div>
+        <% }%>
+    <% } else { %>
+        <div class="text-center">
+          <h1>No Campground</h1>
+        </div>
+    <% } %>
+  </div>
+</div>
+<div class="modal fade" id="upgrade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Upgrade</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="card-deck mb-3 text-center">
+            <div class="card mb-4 box-shadow">
+              <div class="card-header bg-success">
+                <h4 class="my-0 font-weight-normal text-white">Lifetime</h4>
+              </div>
+              <div class="card-body">
+                <h1 class="card-title pricing-card-title">₹100</small></h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                  <li>Can create unlimited campgrounds</li>
+                </ul>
+                <a href="/upgrade" style="text-decoration: none;"><button type="button" class="btn btn-lg btn-block btn-outline-success">Upgrade</button></a>
+              </div>
+            </div>
+            </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    const mapToken = 'pk.eyJ1IjoiYW5lZXNocGlzc2F5IiwiYSI6ImNranZpc2FqbDA5MTgydnBnMjdmZnBtOHcifQ.N4WYihlYJlwQIu5Hg7g-UA';
+    const campgrounds = { features: <%- JSON.stringify(campgrounds) %>}
+</script>
+
+<script src="/javascripts/clusterMap.js"></script>

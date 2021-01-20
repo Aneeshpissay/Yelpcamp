@@ -1,0 +1,136 @@
+<% layout('layouts/boilerplate')%>
+<div class="container mt-4">    
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-3">
+            <div id="profilePicture" class="card shadow-sm d-none d-md-block">
+                <div class="card-body">
+                    <h5 class="card-title text-capitalize"><%= user.username %></h5>
+                    <h6 class="card-subtitle text-muted">                
+                      <% if (campgrounds.length === 1) { %>
+                        <%= campgrounds.length %> Campground
+                      <% } else { %>
+                        <%= campgrounds.length %> Campgrounds
+                      <% } %> 
+                      <div><%= reviews.length %> Reviews</div>
+                    </h6> 
+                </div>        
+            </div>
+            <div class="d-block d-sm-none d-none d-sm-block d-md-none mx-auto">
+              <div class="row">
+                <div class="col-8">
+                  <div id="profilePicture" class="card shadow-sm" >                  
+                    <div class="card-body">
+                      <h5 class="card-title text-capitalize"><%= user.username %></h5>
+                      <h6 class="card-subtitle text-muted">                    
+                        <% if (campgrounds.length === 1) { %>
+                          <%= campgrounds.length %> Campground
+                        <% } else { %>
+                          <%= campgrounds.length %> Campgrounds
+                        <% } %>
+                        <div>
+                          <% if (reviews.length === 1) { %>
+                            <%= reviews.length %> Review
+                          <% } else { %>
+                            <%= reviews.length %> Reviews
+                          <% } %> 
+                        </div>
+                      </h6> 
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        <div class="card shadow-sm mt-3 mb-3">
+          <div class="card-header text-capitalize">
+            <%= user.username %>'s Profile
+          </div>
+          <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="fa fa-envelope"></i> <strong>Email: </strong><a href="mailto:<%= user.email %> "><%= user.email %></a>             
+              </li>  
+              <% if(!user.phone) { %>
+                <% } else { %>
+                  <li class="list-group-item">
+                    <i class="fa fa-phone"></i> <strong>Phone: </strong><span class="text-muted"><%= user.phone %>    </span>          
+                  </li>
+                <% } %>  
+                <li class="list-group-item">
+                    <i class="fa fa-calendar"></i> <strong>Joined: </strong><span class="text-muted"><%= moment(user.createdAt).format('LL') %> </span>             
+                  </li>                      
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% if(booking.length > 0) { %>
+  <div class="container">
+    <h1 style="text-align: center;" class="mb-3">Booking</h1>
+    <table class="table">
+      <thead>
+        <tr class="table-dark">
+          <th scope="col">#</th>
+          <th scope="col">Title</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+          <th scope="col">Number of persons</th>
+          <th scope="col">Number of days</th>
+          <th scope="col">Total Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% booking.forEach(function(book, index) { %>
+        <tr class="table-success">
+          <th scope="row"><%= index + 1 %></th>
+          <td><%= book.title %></td>
+          <td><%= book.startdate %></td>
+          <td><%= book.enddate %></td>
+          <td><%= book.persons %></td>
+          <td><%= book.days %></td>
+          <td><%= book.price %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+  <% if(campgrounds.length > 0 ) { %>
+  <div class="col-12 col-md-6 col-lg-9" style="margin: auto;">
+    <div class="container text-center"><h1>Campgrounds</h1></div>             
+    <div class="row">
+      <% campgrounds.forEach(function(campground) { %>
+        <div class="col-12 col-lg-6 mb-3">
+          <div class="card shadow-sm mt-3">
+            <a href="/campgrounds/<%= campground._id %>"><img id="campgroundCard" class="card-img-top" src="<%= campground.images[0].url %>"></a> 
+            <div class="card-body">
+              <h5 class="card-title">
+                <a href="/campgrounds/<%= campground._id %>" class="text-capitalize"><%= campground.title %></a>
+                <small class="float-right text-muted">₹<%= campground.price%>/night</small>
+
+                                  
+              </h5>              
+              <h6 class="card-subtitle">
+                <% if(!campground.reviews.length) { %>
+                  <span class="text-muted">No Reviews</span>
+                <% } else { %>
+                  <% var stars = ['<i class="fa fa-star text-danger"></i>', '<i class="fa fa-star text-danger"></i>', '<i class="fa fa-star text-danger"></i>', '<i class="fa fa-star text-danger"></i>', '<i class="fa fa-star text-danger"></i>'] %>
+                  <% for(let review of reviews) { %>
+                  <% for(var i = 0; i < review.rating; i++) { %>
+                    <%- stars[i] %>
+                  <% } %>
+                  <% } %>
+                  <% if (campground.reviews.length === 1) { %>
+                    <span class="text-muted"><%= campground.reviews.length %> Review</span> 
+                  <% } else { %>
+                    <span class="text-muted"><%= campground.reviews.length %> Reviews</span> 
+                  <% } %>                
+                <% } %>   
+              </h6> 
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>        
+  </div>
+  <% } %>
+</div>
